@@ -47,3 +47,8 @@ export interface MovieDetails {
   Website: string;
   Response: "True" | "False";
 }
+
+ export type Props = {
+  wishlist: MovieSummary[];
+  onToggleWishlist: (movie: MovieSummary) => void;
+};
