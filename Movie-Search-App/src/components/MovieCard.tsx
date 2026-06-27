@@ -1,15 +1,21 @@
 
 import type { MovieSummary } from "../types/movie";
+import { isMovieWishlisted } from "../helper/utils";
 
 interface Props {
   movie: MovieSummary;
   onNavigate: (param: string) => void;
-}
+  wishlist: MovieSummary[];
+  onToggleWishlist: (movie: MovieSummary) => void;
+};
 
-const MovieCard = ({ movie,onNavigate }: Props) => {
+
+const MovieCard = ({ movie,onNavigate,wishlist,onToggleWishlist }: Props) => {
+
+    const isWishlisted = isMovieWishlisted(wishlist, movie.imdbID ?? "")
   return (
     <div
-      onClick={()=>onNavigate(movie.imdbID)}
+      
       className="
       group
       bg-gray-900
@@ -23,7 +29,6 @@ const MovieCard = ({ movie,onNavigate }: Props) => {
       duration-300
       hover:-translate-y-2
       hover:border-red-500
-      cursor-pointer
       "
     >
       {/* Poster */}
@@ -41,15 +46,15 @@ const MovieCard = ({ movie,onNavigate }: Props) => {
         <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent" />
 
         {/* Rating */}
-        <div className="absolute top-4 right-4">
-          <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold shadow">
-            ⭐
-          </span>
+        <div className="absolute top-4 right-4 z-50 cursor-pointer" onClick={()=> onToggleWishlist(movie)}>
+          <div className="bg-red-600 text-xl text-white p-5 rounded-full  font-semibold shadow">
+            {isWishlisted ? "❤️" : "🤍"}
+          </div>
         </div>
       </div>
 
       {/* Details */}
-      <div className="p-5 space-y-4">
+      <div onClick={()=>onNavigate(movie.imdbID)} className="p-5 space-y-4 cursor-pointer">
         <h2 className="text-red-500 text-xl font-bold line-clamp-1">
           {movie.Title}
         </h2>
@@ -74,6 +79,7 @@ const MovieCard = ({ movie,onNavigate }: Props) => {
           rounded-xl
           text-white
           font-semibold
+          cursor-pointer
           "
         >
           View Details
