@@ -1,16 +1,18 @@
-import { useSearchParams } from "react-router"
+import {useNavigate, useSearchParams } from "react-router"
 import movieService from "../services/movieApi"
 import type {MovieSummary} from '../types/movie.ts'
 import { useEffect, useState } from "react"
 import MovieCard from "../components/MovieCard.tsx"
+import type { Props } from "../types/movie";
 
 
-const Movies = () => {
+const Movies = ({ wishlist, onToggleWishlist }: Props) => {
 
   const [error,setError] = useState<string>('')
   const [loading,setLoading] = useState<boolean>(true)
   const [movies,setMovies]=useState<MovieSummary[]>([])
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const query = searchParams.get("q") ?? ""
 
 
@@ -36,6 +38,10 @@ const Movies = () => {
     fetchMovies()
   }, [query])
 
+  function onNavigate(param:string){
+      navigate(`/movie/${param}`)
+  }
+
   if(loading) {
     return <div className="h-screen  bg-gray-950 flex justify-center items-center text-red-600 text-8xl">...Loading</div>
   }
@@ -46,8 +52,9 @@ const Movies = () => {
 
   return (
     <div className="grid grid-cols-1 p-4 sm:grid-cols-2 xl:grid-cols-5 gap-8 bg-gray-950">
-        {movies.map((movie) => (
-          <MovieCard key={movie.imdbID} movie={movie} />
+        {
+        movies.map((movie) => (
+            <MovieCard wishlist={wishlist} onToggleWishlist={onToggleWishlist} onNavigate={onNavigate} key={movie.imdbID} movie={movie} />
         ))}
    </div>
   )
