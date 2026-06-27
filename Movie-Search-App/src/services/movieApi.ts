@@ -1,4 +1,4 @@
-import type { MovieSummary, SearchMoviesResponse } from '../types/movie.ts'
+import type { MovieSummary, MovieDetails } from '../types/movie.ts'
 
 const API_KEY = import.meta.env.VITE_OMDB_API_KEY
 const BASE_URL  =import.meta.env.VITE_API_URL
@@ -16,12 +16,10 @@ class MovieService {
         throw new Error(data.Error);
       }
 
-      console.log(data)
-
       return data.Search
     }
 
-    async getMovie(id:string):Promise<SearchMoviesResponse>{
+    async getMovie(id:string):Promise<MovieDetails>{
       const res = await fetch(
         `${BASE_URL}?apikey=${API_KEY}&i=${id}`
       )
@@ -32,6 +30,7 @@ class MovieService {
         throw new Error("Failed to fetch movies");
       }
 
+      console.log(data)
       return data
     }
 }
